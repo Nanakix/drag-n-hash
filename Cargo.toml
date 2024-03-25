@@ -1,0 +1,12 @@
+[package]
+name = "drag-n-hash"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+iced = { version = "0.12.0", features = ["advanced"] }
+iced_drop = { git = "https://github.com/brianch/iced_drop" }
+sha1_smol = "1.0.0"
+digest = "0.11.0-pre.8"
