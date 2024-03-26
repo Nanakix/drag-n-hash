@@ -6,7 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-iced = { version = "0.12.0", features = ["advanced"] }
+iced = { version = "0.12.1", features = ["advanced", "debug"] }
 iced_drop = { git = "https://github.com/brianch/iced_drop" }
-sha1_smol = "1.0.0"
+sha1_smol = { version = "1.0.0", features = ["std"] }
 digest = "0.11.0-pre.8"
+crc32fast = "1.4.0"
+crc64fast = "1.1.0"
+md-5 = "0.10.6"
+sha2 = "0.10.8"
