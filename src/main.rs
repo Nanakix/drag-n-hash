@@ -1,50 +1,71 @@
 use iced::widget::{button, column, text};
-use iced::{Alignment, Element, Sandbox, Settings};
-
-// use iced_drop::droppable;
+use iced::{Alignment, Application, Element, Length, Sandbox, Settings, theme};
+use iced::widget::container;
+use iced::widget::container::Id as CId;
+use iced_drop::droppable;
 struct Hashword {
-    value: String,
+    filename: String,
+    sha1:  String,
+    up: iced::widget::container::Id,
+    down: iced::widget::container::Id,
 }
 
 #[derive(Debug, Clone, Copy)]
 pub enum Message {
-    GetValuePressed,
-    ClearValuePressed,
+    GetValue,
+    ClearValue,
 }
 
-impl Sandbox for Hashword {
+impl Default for Hashword {
+    fn default() -> Self {
+        Self {
+            filename: "Drag and drop a file here".to_string(),
+            sha1: "deadbeefcafe".to_string(),
+            up: CId::new("up"),
+            down: CId::new("down"),
+        }
+    }
+}
+
+impl Application for Hashword {
+    type Executor = iced::executor::Default;
     type Message = Message;
 
-    fn new() -> Self {
-        Self {value: String::from("base") }
+    type Theme = iced::theme::Theme;
+
+    type Flags = ();
+    fn new(_flags: Self::Flags) -> (Self, iced::Command<Self::Message>) {
+        (Self::default(), iced::Command::none())
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> iced::Element<'_, Self::Message, Self::Theme, iced::Renderer> {
         column![
-            button("get").on_press(Message::GetValuePressed),
-            text(&self.value.clone()).size(30),
-            button("clear").on_press(Message::ClearValuePressed),
+            button("get").on_press(Message::GetValue),
+            text(&self.filename.clone()).size(30),
+            button("clear").on_press(Message::ClearValue),
         ]
         .padding(20)
         .align_items(Alignment::Center)
         .into()
     }
 
-    fn update(&mut self, message: Message) {
+    fn update(&mut self, message: Message) -> iced::Command<Self::Message> {
         match message {
-            Message::GetValuePressed => {
+            Message::GetValue => {
                 let mut m = sha1_smol::Sha1::new();
                 m.update(b"Hello World!");
-                self.value = m.digest().to_string()
+                self.filename = m.digest().to_string()
             },
-            Message::ClearValuePressed => {
-                self.value = "".into();
+            Message::ClearValue => {
+                self.filename = "".into();
+                self.sha1 = "".into();
             }
         }
+        iced::Command::none()
     }
 
     fn title(&self) -> String {
-        String::from("Hashword")
+        String::from("Drag-n-hash")
     }
 }
 
