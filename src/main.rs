@@ -83,7 +83,7 @@ impl Application for Events {
                     self.rom_name = path.file_name().unwrap().to_str().unwrap().to_string();
                     self.crc32 = format!("CRC32: {:X}", crc32fast::hash(buffer.as_slice()));
                     let mut c = crc64fast::Digest::new();
-                    c.write(&mut buffer.clone());
+                    c.write(&buffer.clone());
                     self.crc64 = format!("CRC64: {:X}", c.sum64());
                     self.sha1 = "SHA1: ".to_string().clone() + Sha1::from(buffer.clone()).hexdigest().to_uppercase().as_str();
                     self.sha256 = format!("SHA256: {:X}", Sha256::digest(buffer.clone()));
