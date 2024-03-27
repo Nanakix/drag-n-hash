@@ -85,7 +85,7 @@ impl Application for Events {
                     let mut c = crc64fast::Digest::new();
                     c.write(&buffer.clone());
                     self.crc64 = format!("CRC64: {:X}", c.sum64());
-                    self.sha1 = "SHA1: ".to_string().clone() + Sha1::from(buffer.clone()).hexdigest().to_uppercase().as_str();
+                    self.sha1 = format!("SHA1: {}", Sha1::from(buffer.clone()).hexdigest().to_uppercase());
                     self.sha256 = format!("SHA256: {:X}", Sha256::digest(buffer.clone()));
                     self.md5 = format!("MD5: {:X}", Md5::digest(buffer.clone()));
                     self.rom_size = format!("ROM Size: {}", buffer.len());
