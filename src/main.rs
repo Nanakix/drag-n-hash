@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::Read;
 use humansize::{FormatSize, BINARY};
 use iced::alignment;
-// use iced::clipboard;
+use iced::clipboard;
 use iced::event::{self, Event};
 use iced::executor;
 use iced::widget::{button, /*checkbox,*/ container, text, Column};
@@ -42,7 +42,6 @@ struct Events {
     sha1: String,
     sha256: String,
     crc32: String,
-    crc64: String,
     rom_size: String,
 }
 
@@ -82,15 +81,11 @@ impl Application for Events {
 
                     self.rom_name = path.file_name().unwrap().to_str().unwrap().to_string();
                     self.crc32 = format!("CRC32: {:X}", crc32fast::hash(buffer.as_slice()));
-                    let mut c = crc64fast::Digest::new();
-                    c.write(&buffer.clone());
-                    self.crc64 = format!("CRC64: {:X}", c.sum64());
                     self.sha1 = format!("SHA1: {}", Sha1::from(buffer.clone()).hexdigest().to_uppercase());
                     self.sha256 = format!("SHA256: {:X}", Sha256::digest(buffer.clone()));
                     self.md5 = format!("MD5: {:X}", Md5::digest(buffer.clone()));
                     self.rom_size = format!("ROM Size: {} bytes, ({})", buffer.len(), buffer.len().format_size(BINARY));
-
-                    Command::none()
+                    clipboard::write(format!("{}\n{}\n{}\n{}\n{}\n{}\n",self.rom_name, self.crc32, self.sha1, self.sha256, self.md5, self.rom_size))
                 }
                 else {
                     Command::none()
@@ -119,7 +114,7 @@ impl Application for Events {
                  self.sha1.as_str(),
                  self.sha256.as_str(),
                  self.crc32.as_str(),
-                 self.crc64.as_str(),
+                 // self.crc64.as_str(),
                  self.rom_size.as_str()]
                 .iter()
                 .map(|event| text(event.to_string()).size(20))
