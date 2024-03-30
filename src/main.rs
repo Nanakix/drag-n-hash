@@ -5,7 +5,7 @@ use iced::alignment;
 use iced::clipboard;
 use iced::event::{self, Event};
 use iced::executor;
-use iced::widget::{button, /*checkbox,*/ container, text, Column};
+use iced::widget::{button, container, text, Column};
 use iced::window;
 use iced::{
     Alignment, Application, Command, Element, Length, Settings, Subscription,
@@ -14,17 +14,9 @@ use iced::{
 use md5::Md5;
 use sha1_smol::Sha1;
 use sha2::{Digest, Sha256};
-// use std::env;
-// use std::path::Path;
-// use std::ptr::null_mut;
 
 
 pub fn main() -> iced::Result {
-    // let args: Vec<String> = env::args().collect();
-    // let mut dragged_at_launch= null_mut();
-    // if !args.is_empty() && args.len() <= 1 {
-    //     dragged_at_launch =
-    // }
     Events::run(Settings {
         window: window::Settings {
             exit_on_close_request: false,
@@ -48,8 +40,6 @@ struct Events {
 #[derive(Debug, Clone)]
 enum Message {
     EventOccurred(Event),
-    // CopyToClipboard(Event),
-    // Toggled(bool),
     Exit,
 }
 impl Application for Events {
@@ -84,21 +74,13 @@ impl Application for Events {
                     self.sha1 = format!("SHA1: {}", Sha1::from(buffer.clone()).hexdigest().to_uppercase());
                     self.sha256 = format!("SHA256: {:X}", Sha256::digest(buffer.clone()));
                     self.md5 = format!("MD5: {:X}", Md5::digest(buffer.clone()));
-                    self.rom_size = format!("ROM Size: {} bytes, ({})", buffer.len(), buffer.len().format_size(BINARY));
+                    self.rom_size = format!("Size: {} bytes, ({})", buffer.len(), buffer.len().format_size(BINARY));
                     clipboard::write(format!("{}\n{}\n{}\n{}\n{}\n{}\n",self.rom_name, self.crc32, self.sha1, self.sha256, self.md5, self.rom_size))
                 }
                 else {
                     Command::none()
                 }
             }
-            // Message::CopyToClipboard(_event) => {
-            //     todo!()
-            // }
-            // Message::Toggled(enabled) => {
-            //     self.enabled = enabled;
-            //
-            //     Command::none()
-            // }
             Message::Exit => window::close(window::Id::MAIN),
         }
     }
@@ -114,7 +96,6 @@ impl Application for Events {
                  self.sha1.as_str(),
                  self.sha256.as_str(),
                  self.crc32.as_str(),
-                 // self.crc64.as_str(),
                  self.rom_size.as_str()]
                 .iter()
                 .map(|event| text(event.to_string()).size(20))
@@ -135,7 +116,6 @@ impl Application for Events {
             .align_items(Alignment::Center)
             .spacing(20)
             .push(dropped)
-            // .push(toggle)
             .push(exit);
 
         container(content)
