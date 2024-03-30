@@ -1,6 +1,6 @@
 # Drag-n-hash
 
-A simple GUI application to get hashes from a file dragged-and-dropped onto the application window. 
+A simple cross-platform GUI application to get hashes from a file dragged-and-dropped onto the application window. 
 
 # Features
 - [X] A Window
@@ -15,3 +15,8 @@ A simple GUI application to get hashes from a file dragged-and-dropped onto the 
 - Add a Column on the left-side with the desired information to select for computing/parsing.
 - Lots of auto-parsing possibilities (magic numbers, ROM headers, ...)
 
+# Resources
+
+Here is a list of sources I browsed to make this project come to life, I would like to thank all of the people involved in these:
+- The [Iced](https://iced.rs/) project, for the GUI
+- [Alican](https://alican.codes/rust-github-actions) for the CI workflow
