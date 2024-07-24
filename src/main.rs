@@ -1,5 +1,3 @@
-use std::fs::File;
-use std::io::Read;
 use humansize::{FormatSize, BINARY};
 use iced::alignment;
 use iced::clipboard;
@@ -65,16 +63,13 @@ impl Application for Events {
                 }
                 if let Event::Window(_id, window::Event::FileDropped(path)) = event
                 {
-                    let mut f = File::open(path.clone()).unwrap();
-                    let mut buffer = Vec::new();
-                    f.read_to_end(&mut buffer).unwrap();
-
+                    let f = std::fs::read(path.clone()).unwrap();
                     self.rom_name = path.file_name().unwrap().to_str().unwrap().to_string();
-                    self.crc32 = format!("CRC32: {:X}", crc32fast::hash(buffer.as_slice()));
-                    self.sha1 = format!("SHA1: {}", Sha1::from(buffer.clone()).hexdigest().to_uppercase());
-                    self.sha256 = format!("SHA256: {:X}", Sha256::digest(buffer.clone()));
-                    self.md5 = format!("MD5: {:X}", Md5::digest(buffer.clone()));
-                    self.rom_size = format!("Size: {} bytes, ({})", buffer.len(), buffer.len().format_size(BINARY));
+                    self.crc32 = format!("CRC32: {:X}", crc32fast::hash(f.as_slice()));
+                    self.sha1 = format!("SHA1: {}", Sha1::from(f.as_slice()).hexdigest().to_uppercase());
+                    self.sha256 = format!("SHA256: {:X}", Sha256::digest(f.as_slice()));
+                    self.md5 = format!("MD5: {:X}", Md5::digest(f.as_slice()));
+                    self.rom_size = format!("Size: {} bytes, ({})", f.len(), f.len().format_size(BINARY));
                     clipboard::write(format!("{}\n{}\n{}\n{}\n{}\n{}\n",self.rom_name, self.crc32, self.sha1, self.sha256, self.md5, self.rom_size))
                 }
                 else {
