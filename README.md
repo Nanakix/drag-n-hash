@@ -10,10 +10,12 @@ A simple cross-platform GUI application to get hashes from a file dragged-and-dr
   - [X] Copy to clipboard
 - [X] A sober but clean UI
 
+
 # Possible Evolutions
 - When dropping a file on the binary icon while in file explorer, directly copy data to clipboard while GUI window is spawning.
 - Add a Column on the left-side with the desired information to select for computing/parsing.
 - Lots of auto-parsing possibilities (magic numbers, ROM headers, ...)
+- Handling files with a size > available physical memory, as currently the program crashes if the file cannot be loaded into RAM.
 
 # Resources
 
