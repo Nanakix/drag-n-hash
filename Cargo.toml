@@ -4,10 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-iced = { version = "0.12.1", features = ["advanced", "debug"] }
+iced = { version = "0.12.1", features = ["advanced", "debug", "tokio"] }
 sha1_smol = { version = "1.0.0", features = ["std"] }
 digest = "0.11.0-pre.8"
 crc32fast = "1.4.0"
 md-5 = "0.10.6"
 sha2 = "0.10.8"
 humansize = { version = "2.0.0", features = ["impl_style"] }
+flume = "0.11.0"
