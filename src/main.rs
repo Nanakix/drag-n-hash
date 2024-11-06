@@ -14,6 +14,7 @@ use iced::{
 use md5::Md5;
 use sha1_smol::Sha1;
 use sha2::{Digest, Sha256};
+use drag_n_hash::{Status, Toast};
 
 
 pub fn main() -> iced::Result {
@@ -43,6 +44,8 @@ struct Events {
     sha256_receive: (Sender<String>, Receiver<String>),
     crc32_receive: (Sender<String>, Receiver<String>),
     running: bool,
+    toasts: Vec<Toast>,
+    finished: bool,
 }
 
 impl Default for Events {
@@ -72,6 +75,8 @@ impl Default for Events {
             sha256_receive,
             crc32_receive,
             running: false,
+            toasts: vec![],
+            finished: false,
         }
     }
 }
@@ -111,6 +116,7 @@ impl Application for Events {
                         return Command::none();
                     }
                     self.running = true;
+                    self.finished = false;
 
                     let md5_rx = self.md5_send.1.clone();
                     let md5_tx = self.md5_receive.0.clone();
@@ -224,9 +230,16 @@ impl Application for Events {
 
                 if self.md5 != "MD5: Computing..." && self.sha1 != "SHA1: Computing..." && self.sha256 != "SHA256: Computing..." && self.crc32 != "CRC32: Computing..." {
                     self.running = false;
-                    return clipboard::write(format!("{}\n{}\n{}\n{}\n{}\n{}\n",self.rom_name, self.crc32, self.sha1, self.sha256, self.md5, self.rom_size));
+                    self.toasts = vec![Toast {
+                        title: "Done".into(),
+                        body: "Computation finished, result has been written to clipboard".into(),
+                        status: Status::Primary,
+                    }];
+                    if !self.finished {
+                        self.finished = true;
+                        return clipboard::write(format!("{}\n{}\n{}\n{}\n{}\n{}\n",self.rom_name, self.crc32, self.sha1, self.sha256, self.md5, self.rom_size));
+                    }
                 }
-
                 Command::none()
             }
             Message::CopyToClipboard => clipboard::write(format!("{}\n{}\n{}\n{}\n{}\n{}\n",self.rom_name, self.crc32, self.sha1, self.sha256, self.md5, self.rom_size)),
